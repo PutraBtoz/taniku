@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Jakarta Pusat", 
+        "coordinates": [106.8223, -6.1818], 
+        "population": 9125000
+    }, 
+    {
+        "name": "Surabaya", 
+        "coordinates": [112.750833, -7.249167],
+        "population": 2845000
+    }
+]

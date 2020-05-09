@@ -24,30 +24,30 @@ class MainLayout extends React.Component {
   componentDidMount() {
     this.checkBreakpoint(this.props.breakpoint);
 
-    setTimeout(() => {
-      if (!this.notificationSystem) {
-        return;
-      }
+    // setTimeout(() => {
+    //   if (!this.notificationSystem) {
+    //     return;
+    //   }
 
-      this.notificationSystem.addNotification({
-        title: <MdImportantDevices />,
-        message: 'Welome to Reduction Admin!',
-        level: 'info',
-      });
-    }, 1500);
+    //   this.notificationSystem.addNotification({
+    //     title: <MdImportantDevices />,
+    //     message: 'Selamat datang Pak Tani',
+    //     level: 'info',
+    //   });
+    // }, 1500);
 
-    setTimeout(() => {
-      if (!this.notificationSystem) {
-        return;
-      }
+    // setTimeout(() => {
+    //   if (!this.notificationSystem) {
+    //     return;
+    //   }
 
-      this.notificationSystem.addNotification({
-        title: <MdLoyalty />,
-        message:
-          'Reduction is carefully designed template powered by React and Bootstrap4!',
-        level: 'info',
-      });
-    }, 2500);
+    //   this.notificationSystem.addNotification({
+    //     title: <MdLoyalty />,
+    //     message:
+    //       'Menanam hari ini, panen kemudian!',
+    //     level: 'info',
+    //   });
+    // }, 2500);
   }
 
   // close sidebar when
@@ -92,7 +92,7 @@ class MainLayout extends React.Component {
       <main className="cr-app bg-light">
         <Sidebar />
         <Content fluid onClick={this.handleContentClick}>
-          <Header />
+          <Header {...this.props} {...children} />
           {children}
           <Footer />
         </Content>

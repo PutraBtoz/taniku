@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "start": "2020-03-27",
+        "end": "2020-03-31",
+        "title": "Riset bibit"
+    },
+    {
+        "id": 2,
+        "start": "2020-04-02",
+        "end": "2020-04-09",
+        "title": "Beli bibit"
+    },
+    {
+        "id": 3,
+        "start": "2020-04-15",
+        "end": "2020-04-16",
+        "title": "Tanam bibit"
+    },
+    {
+        "id": 4,
+        "start": "2020-10-30",
+        "end": "2020-10-31",
+        "title": "Panen"
+    },
+    {
+        "id": 5,
+        "start": "2020-04-30",
+        "end": "2020-04-30",
+        "title": "Beli pupuk"
+    }
+]

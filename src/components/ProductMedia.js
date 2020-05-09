@@ -24,9 +24,9 @@ const ProductMedia = ({ image, title, description, right, ...restProps }) => {
       </Media>
       <Media right className="align-self-center">
         {right && typeof right === 'string' ? (
-          <Typography type="h4">{right}</Typography>
+          <Typography type="h4">Rp {right}/kg</Typography>
         ) : (
-          right
+          'Rp ' + right + '/kg'
         )}
       </Media>
     </Media>

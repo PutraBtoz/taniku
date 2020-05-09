@@ -1,9 +1,23 @@
-import logo200Image from 'assets/img/logo/logo_200.png';
+// import logo200Image from 'assets/img/logo/logo_200.png';
+import logo100Image from 'assets/img/logo/logo_100.png';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import axios from 'axios';
+import { setUserSession } from '../utils/Common';
 
 class AuthForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      loading: false,
+      username: '',
+      password: '',
+      email: '',
+    };
+  }
+
   get isLogin() {
     return this.props.authState === STATE_LOGIN;
   }
@@ -20,6 +34,12 @@ class AuthForm extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    if(this.isSignup){
+      this.handleRegister();
+    }else{
+      this.handleLogin();
+    }
+    // console.log(this.props.usernameInputProps, "OKOK")
   };
 
   renderButtonText() {
@@ -36,11 +56,46 @@ class AuthForm extends React.Component {
     return buttonText;
   }
 
+  handleChange = (name, event) => {
+    this.setState({
+      [name]: event.target.value
+    });
+  };
+
+  handleLogin = () => {
+    this.setState({error: null, loading: true});
+    axios.post('http://localhost:4000/users/signin', { username: this.state.username, password: this.state.password }).then(response => {
+      this.setState({loading: false});
+      setUserSession(response.data.token, response.data.user);
+      this.props.history.push('/');
+    }).catch(error => {
+      this.setState({loading: false});
+      console.log(error.response)
+      if (error.response.status === 401) this.setState({error: error.response.data.message});
+      else this.setState({error: "Something went wrong. Please try again later."});
+    });
+  }
+
+  handleRegister = () => {
+    this.setState({error: null, loading: true});
+    axios.post('http://localhost:4000/users/register', { username: this.state.username, password: this.state.password, email: this.state.email }).then(response => {
+      this.setState({loading: false});
+      this.props.history.push('/login');
+    }).catch(error => {
+      this.setState({loading: false});
+      console.log(error.response)
+      if (error.response.status === 401) this.setState({error: error.response.data.message});
+      else this.setState({error: "Something went wrong. Please try again later."});
+    });
+  }
+
   render() {
     const {
       showLogo,
       usernameLabel,
       usernameInputProps,
+      emailLabel,
+      emailInputProps,
       passwordLabel,
       passwordInputProps,
       confirmPasswordLabel,
@@ -54,9 +109,9 @@ class AuthForm extends React.Component {
         {showLogo && (
           <div className="text-center pb-4">
             <img
-              src={logo200Image}
+              src={logo100Image}
               className="rounded"
-              style={{ width: 60, height: 60, cursor: 'pointer' }}
+              style={{ width: 200, height: 200, cursor: 'pointer' }}
               alt="logo"
               onClick={onLogoClick}
             />
@@ -64,11 +119,17 @@ class AuthForm extends React.Component {
         )}
         <FormGroup>
           <Label for={usernameLabel}>{usernameLabel}</Label>
-          <Input {...usernameInputProps} />
+          <Input onChange={(event) => this.handleChange('username', event)} value={this.state.username} {...usernameInputProps} />
         </FormGroup>
+        {this.isSignup && (
+          <FormGroup>
+            <Label for={emailLabel}>{emailLabel}</Label>
+            <Input onChange={(event) => this.handleChange('email', event)} value={this.state.email} {...emailInputProps} />
+          </FormGroup>
+        )}
         <FormGroup>
           <Label for={passwordLabel}>{passwordLabel}</Label>
-          <Input {...passwordInputProps} />
+          <Input onChange={(event) => this.handleChange('password', event)} value={this.state.password} {...passwordInputProps} />
         </FormGroup>
         {this.isSignup && (
           <FormGroup>
@@ -87,7 +148,7 @@ class AuthForm extends React.Component {
           size="lg"
           className="bg-gradient-theme-left border-0"
           block
-          onClick={this.handleSubmit}>
+          type='submit'>
           {this.renderButtonText()}
         </Button>
 
@@ -120,6 +181,8 @@ AuthForm.propTypes = {
   showLogo: PropTypes.bool,
   usernameLabel: PropTypes.string,
   usernameInputProps: PropTypes.object,
+  emailLabel: PropTypes.string,
+  emailInputProps: PropTypes.object,
   passwordLabel: PropTypes.string,
   passwordInputProps: PropTypes.object,
   confirmPasswordLabel: PropTypes.string,
@@ -130,8 +193,13 @@ AuthForm.propTypes = {
 AuthForm.defaultProps = {
   authState: 'LOGIN',
   showLogo: true,
-  usernameLabel: 'Email',
+  usernameLabel: 'Username',
   usernameInputProps: {
+    type: 'text',
+    placeholder: 'username',
+  },
+  emailLabel: 'Email',
+  emailInputProps: {
     type: 'email',
     placeholder: 'your@email.com',
   },

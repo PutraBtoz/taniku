@@ -29,6 +29,7 @@ import {
   PopoverBody,
 } from 'reactstrap';
 import bn from 'utils/bemnames';
+import { getUser, removeUserSession } from '../../utils/Common';
 
 const bem = bn.create('header');
 
@@ -75,9 +76,15 @@ class Header extends React.Component {
     document.querySelector('.cr-sidebar').classList.toggle('cr-sidebar--open');
   };
 
+  handleLogout = () => {
+    removeUserSession();
+    console.log(this.props);
+    this.props.history.push('/login');
+  }
+
   render() {
     const { isNotificationConfirmed } = this.state;
-
+    const user = getUser();
     return (
       <Navbar light expand className={bem.b('bg-white')}>
         <Nav navbar className="mr-2">
@@ -135,7 +142,7 @@ class Header extends React.Component {
             >
               <PopoverBody className="p-0 border-light">
                 <UserCard
-                  title="Jane"
+                  title={user.name}
                   subtitle="jane@jane.com"
                   text="Last updated 3 mins ago"
                   className="border-light"
@@ -144,6 +151,8 @@ class Header extends React.Component {
                     <ListGroupItem tag="button" action className="border-light">
                       <MdPersonPin /> Profile
                     </ListGroupItem>
+                    {!user.isAdmin &&
+                    <div>
                     <ListGroupItem tag="button" action className="border-light">
                       <MdInsertChart /> Stats
                     </ListGroupItem>
@@ -156,7 +165,13 @@ class Header extends React.Component {
                     <ListGroupItem tag="button" action className="border-light">
                       <MdHelp /> Help
                     </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light">
+                    </div>
+                    }
+                    <ListGroupItem 
+                      tag="button" 
+                      action 
+                      onClick={this.handleLogout}
+                      className="border-light">
                       <MdExitToApp /> Signout
                     </ListGroupItem>
                   </ListGroup>

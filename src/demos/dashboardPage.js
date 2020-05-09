@@ -1,9 +1,15 @@
-import product1Image from 'assets/img/products/product_640-1.jpg';
-import product2Image from 'assets/img/products/product_640-2.jpg';
-import product3Image from 'assets/img/products/product_640-3.jpg';
-import product4Image from 'assets/img/products/product_640-4.jpg';
-import product5Image from 'assets/img/products/product_640-5.jpg';
-import product6Image from 'assets/img/products/product_640-6.jpg';
+// import product1Image from 'assets/img/products/product_640-1.jpg';
+// import product2Image from 'assets/img/products/product_640-2.jpg';
+// import product3Image from 'assets/img/products/product_640-3.jpg';
+// import product4Image from 'assets/img/products/product_640-4.jpg';
+// import product5Image from 'assets/img/products/product_640-5.jpg';
+// import product6Image from 'assets/img/products/product_640-6.jpg';
+
+import product1Image from 'assets/img/products/Umbi jalar cilembu.png';
+import product2Image from 'assets/img/products/Umbi jalar kuning.png';
+import product3Image from 'assets/img/products/Umbi jalar putih.png';
+import product4Image from 'assets/img/products/Umbi jalar orange.png';
+import product5Image from 'assets/img/products/Umbi jalar ungu.png';
 
 import user1Image from 'assets/img/users/100_1.jpg';
 import user2Image from 'assets/img/users/100_2.jpg';
@@ -24,45 +30,45 @@ export const productsData = [
   {
     id: 1,
     image: product1Image,
-    title: 'Admin Template',
-    description: 'Responsive admin template...',
-    right: '$36',
+    title: 'Ubi Jalar Cilembu',
+    description: 'Ubi jalar Cilembu kaya serat, antioksidan, mineral dan kandungan karbohidratnya baik untuk program diet',
+    right: 12000,
   },
   {
     id: 2,
     image: product2Image,
-    title: 'Schedule App',
-    description: 'Manage your schedule...',
-    right: '$9',
+    title: 'Ubi Jalar Kuning',
+    description: 'Kandungan zat gizi yang cukup tinggi pada ubi jalar kuning adalah vitamin A. Sedangkan nutrisi vitamin C memenuhi 37 persen kebutuhan harian tubuh',
+    right: 12500,
   },
   {
     id: 3,
     image: product3Image,
-    title: 'Chat App',
-    description: 'Realtime chat application...',
-    right: '$12',
+    title: 'Ubi Jalar Putih',
+    description: 'Ubi jalar putih memiliki testur agak rapuh dan kaya nutrisi seperti protein, serat berupa pektin, hemiselulosa, selulosa, antioksidan, kalsium, kalium, magnesium dan berbagai vitamin',
+    right: 13000,
   },
   {
     id: 4,
     image: product4Image,
-    title: 'Wordpress Business Theme',
-    description: 'Over 100+ templates and pages...',
-    right: '$24',
+    title: 'Ubi Jalar Orange',
+    description: 'Kandungan betakaroten ini dapat mencegah kanker, penuaan dini, penyakit jantung, stroke, katarak, sengatan cahaya matahari dan gangguan otot',
+    right: 15000,
   },
   {
     id: 5,
     image: product5Image,
-    title: 'Camera App',
-    description: 'Over 30+ filter...',
-    right: '$6.99',
+    title: 'Ubi Jalar Ungu',
+    description: 'Ubi jalar ini berwarna ungu dari kulit luar hingga bagian isinya. Selain sumber karbohidrat dan protein tinggi, ubi jalar ungu juga mengandung vitamin A, C, B1, dan riboflavin',
+    right: 18000,
   },
-  {
-    id: 6,
-    image: product6Image,
-    title: 'Calendar App',
-    description: 'Organize your schedule...',
-    right: '$0.99',
-  },
+  // {
+  //   id: 6,
+  //   image: product6Image,
+  //   title: 'Calendar App',
+  //   description: 'Organize your schedule...',
+  //   right: '$0.99',
+  // },
 ];
 
 export const avatarsData = [
@@ -218,19 +224,19 @@ export const todosData = [
 export const chartjs = {
   bar: {
     data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ['January', 'February', 'March', 'April'],
       datasets: [
         {
-          label: 'Expense for this year',
+          label: 'Consul for this year',
           backgroundColor: '#6a82fb',
           stack: 'Expense',
-          data: [10000, 30000, 50000, 80000, 60000, 20000, 10000],
+          data: [10, 30, 50, 80],
         },
         {
-          label: 'Expense for last year',
-          backgroundColor: '#fc5c7d',
+          label: 'Consul for last year',
+          backgroundColor: '#36ce7a',
           stack: 'Expense',
-          data: [30000, 80000, 50000, 100000, 60000, 40000, 90000],
+          data: [30, 80, 50, 100],
         },
       ],
     },

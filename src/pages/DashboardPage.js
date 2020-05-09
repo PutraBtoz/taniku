@@ -16,6 +16,7 @@ import {
   userProgressTableData,
 } from 'demos/dashboardPage';
 import React from 'react';
+import axios from 'axios';
 import { Bar, Line } from 'react-chartjs-2';
 import {
   MdBubbleChart,
@@ -42,6 +43,7 @@ import {
   ListGroupItem,
   Row,
 } from 'reactstrap';
+import ReactTooltip from "react-tooltip";
 import { getColor } from 'utils/colors';
 
 const today = new Date();
@@ -55,6 +57,21 @@ class DashboardPage extends React.Component {
   componentDidMount() {
     // this is needed, because InfiniteCalendar forces window scroll
     window.scrollTo(0, 0);
+    axios.get(`http://localhost:4000/api/gis`)
+    .then(res => this.setState({dataGis: res.data}))
+  }
+
+  componentDidUpdate() {
+    ReactTooltip.rebuild();
+  }
+
+  state = {
+    content: "",
+    dataGis: []
+  }
+
+  handleContent = (city) => {
+    this.setState({content: city})
   }
 
   render() {
@@ -70,9 +87,9 @@ class DashboardPage extends React.Component {
         <Row>
           <Col lg={3} md={6} sm={6} xs={12}>
             <NumberWidget
-              title="Total Profit"
+              title="Total Sigap"
               subtitle="This month"
-              number="9.8k"
+              number="26"
               color="secondary"
               progress={{
                 value: 75,
@@ -83,9 +100,22 @@ class DashboardPage extends React.Component {
 
           <Col lg={3} md={6} sm={6} xs={12}>
             <NumberWidget
+              title="Total Lapor"
+              subtitle="This month"
+              number="12"
+              color="secondary"
+              progress={{
+                value: 60,
+                label: 'Last month',
+              }}
+            />
+          </Col>
+
+          <Col lg={3} md={6} sm={6} xs={12}>
+            <NumberWidget
               title="Monthly Visitors"
               subtitle="This month"
-              number="5,400"
+              number="500"
               color="secondary"
               progress={{
                 value: 45,
@@ -98,7 +128,7 @@ class DashboardPage extends React.Component {
             <NumberWidget
               title="New Users"
               subtitle="This month"
-              number="3,400"
+              number="20"
               color="secondary"
               progress={{
                 value: 90,
@@ -107,23 +137,11 @@ class DashboardPage extends React.Component {
             />
           </Col>
 
-          <Col lg={3} md={6} sm={6} xs={12}>
-            <NumberWidget
-              title="Bounce Rate"
-              subtitle="This month"
-              number="38%"
-              color="secondary"
-              progress={{
-                value: 60,
-                label: 'Last month',
-              }}
-            />
-          </Col>
         </Row>
 
         <Row>
-          <Col lg="8" md="12" sm="12" xs="12">
-            <Card>
+          <Col lg="12" md="12" sm="12" xs="12">
+            {/* <Card>
               <CardHeader>
                 Total Revenue{' '}
                 <small className="text-muted text-capitalize">This year</small>
@@ -131,33 +149,15 @@ class DashboardPage extends React.Component {
               <CardBody>
                 <Line data={chartjs.line.data} options={chartjs.line.options} />
               </CardBody>
-            </Card>
-          </Col>
-
-          <Col lg="4" md="12" sm="12" xs="12">
+            </Card> */}
             <Card>
-              <CardHeader>Total Expense</CardHeader>
+              <CardHeader>
+                Geographic Information System - Data Pelaporan Konsultasi
+              </CardHeader>
               <CardBody>
-                <Bar data={chartjs.bar.data} options={chartjs.bar.options} />
+                <MapWithBubbles setTooltipContent={this.handleContent} dataGis={this.state.dataGis} />
+                <ReactTooltip id="map">{this.state.content}</ReactTooltip>
               </CardBody>
-              <ListGroup flush>
-                <ListGroupItem>
-                  <MdInsertChart size={25} color={primaryColor} /> Cost of sales{' '}
-                  <Badge color="secondary">$3000</Badge>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <MdBubbleChart size={25} color={primaryColor} /> Management
-                  costs <Badge color="secondary">$1200</Badge>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <MdShowChart size={25} color={primaryColor} /> Financial costs{' '}
-                  <Badge color="secondary">$800</Badge>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <MdPieChart size={25} color={primaryColor} /> Other operating
-                  costs <Badge color="secondary">$2400</Badge>
-                </ListGroupItem>
-              </ListGroup>
             </Card>
           </Col>
         </Row>
@@ -168,14 +168,14 @@ class DashboardPage extends React.Component {
             inverse={false}
             icon={MdThumbUp}
             title="50+ Likes"
-            subtitle="People you like"
+            subtitle="Post you like"
           />
           <IconWidget
             bgColor="white"
             inverse={false}
             icon={MdRateReview}
-            title="10+ Reviews"
-            subtitle="New Reviews"
+            title="10+ Comments"
+            subtitle="New Comments"
           />
           <IconWidget
             bgColor="white"
@@ -187,26 +187,52 @@ class DashboardPage extends React.Component {
         </CardGroup>
 
         <Row>
-          <Col md="6" sm="12" xs="12">
+        <Col lg="4" md="12" sm="12" xs="12">
             <Card>
-              <CardHeader>New Products</CardHeader>
+              <CardHeader>Total Consul</CardHeader>
               <CardBody>
-                {productsData.map(
-                  ({ id, image, title, description, right }) => (
-                    <ProductMedia
-                      key={id}
-                      image={image}
-                      title={title}
-                      description={description}
-                      right={right}
-                    />
-                  ),
-                )}
+                <Bar data={chartjs.bar.data} options={chartjs.bar.options} />
               </CardBody>
+              <ListGroup flush>
+                <ListGroupItem>
+                  <MdInsertChart size={25} color={primaryColor} /> Malang{' '}
+                  <Badge color="secondary">30 result</Badge>
+                </ListGroupItem>
+                <ListGroupItem>
+                  <MdInsertChart size={25} color={primaryColor} /> Madiun{' '}
+                  <Badge color="secondary">20 result</Badge>
+                </ListGroupItem>
+                <ListGroupItem>
+                  <MdInsertChart size={25} color={primaryColor} /> Surabaya{' '}
+                  <Badge color="secondary">20 result</Badge>
+                </ListGroupItem>
+                <ListGroupItem>
+                  <MdInsertChart size={25} color={primaryColor} /> Jakarta{' '}
+                  <Badge color="secondary">10 result</Badge>
+                </ListGroupItem>
+              </ListGroup>
             </Card>
           </Col>
-
-          <Col md="6" sm="12" xs="12">
+          <Col md="8" sm="12" xs="12">
+              <Card>
+                <CardHeader>New Products</CardHeader>
+                <CardBody>
+                  {productsData.map(
+                    ({ id, image, title, description, right }) => (
+                      <ProductMedia
+                        key={id}
+                        image={image}
+                        title={title}
+                        description={description}
+                        right={right}
+                      />
+                    ),
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+        </Row>
+          {/* <Col md="8" sm="12" xs="12">
             <Card>
               <CardHeader>New Users</CardHeader>
               <CardBody>
@@ -222,95 +248,95 @@ class DashboardPage extends React.Component {
                 />
               </CardBody>
             </Card>
-          </Col>
-        </Row>
+          </Col> */}
 
-        <Row>
-          <Col lg={4} md={4} sm={12} xs={12}>
-            <Card>
-              <Line
-                data={getStackLineChart({
-                  labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                  ],
-                  data: [0, 13000, 5000, 24000, 16000, 25000, 10000],
-                })}
-                options={stackLineChartOptions}
-              />
-              <CardBody
-                className="text-primary"
-                style={{ position: 'absolute' }}
-              >
-                <CardTitle>
-                  <MdInsertChart /> Sales
-                </CardTitle>
-              </CardBody>
-            </Card>
-          </Col>
 
-          <Col lg={4} md={4} sm={12} xs={12}>
-            <Card>
-              <Line
-                data={getStackLineChart({
-                  labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                  ],
-                  data: [10000, 15000, 5000, 10000, 5000, 10000, 10000],
-                })}
-                options={stackLineChartOptions}
-              />
-              <CardBody
-                className="text-primary"
-                style={{ position: 'absolute' }}
-              >
-                <CardTitle>
-                  <MdInsertChart /> Revenue
-                </CardTitle>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col lg={4} md={4} sm={12} xs={12}>
-            <Card>
-              <Line
-                data={getStackLineChart({
-                  labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                  ],
-                  data: [0, 13000, 5000, 24000, 16000, 25000, 10000].reverse(),
-                })}
-                options={stackLineChartOptions}
-              />
-              <CardBody
-                className="text-primary"
-                style={{ position: 'absolute', right: 0 }}
-              >
-                <CardTitle>
-                  <MdInsertChart /> Profit
-                </CardTitle>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+          {/* <Row>
+            <Col lg={4} md={4} sm={12} xs={12}>
+              <Card>
+                <Line
+                  data={getStackLineChart({
+                    labels: [
+                      'January',
+                      'February',
+                      'March',
+                      'April',
+                      'May',
+                      'June',
+                      'July',
+                    ],
+                    data: [0, 13000, 5000, 24000, 16000, 25000, 10000],
+                  })}
+                  options={stackLineChartOptions}
+                />
+                <CardBody
+                  className="text-primary"
+                  style={{ position: 'absolute' }}
+                >
+                  <CardTitle>
+                    <MdInsertChart /> Sales
+                  </CardTitle>
+                </CardBody>
+              </Card>
+            </Col>
 
-        <Row>
+            <Col lg={4} md={4} sm={12} xs={12}>
+              <Card>
+                <Line
+                  data={getStackLineChart({
+                    labels: [
+                      'January',
+                      'February',
+                      'March',
+                      'April',
+                      'May',
+                      'June',
+                      'July',
+                    ],
+                    data: [10000, 15000, 5000, 10000, 5000, 10000, 10000],
+                  })}
+                  options={stackLineChartOptions}
+                />
+                <CardBody
+                  className="text-primary"
+                  style={{ position: 'absolute' }}
+                >
+                  <CardTitle>
+                    <MdInsertChart /> Revenue
+                  </CardTitle>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg={4} md={4} sm={12} xs={12}>
+              <Card>
+                <Line
+                  data={getStackLineChart({
+                    labels: [
+                      'January',
+                      'February',
+                      'March',
+                      'April',
+                      'May',
+                      'June',
+                      'July',
+                    ],
+                    data: [0, 13000, 5000, 24000, 16000, 25000, 10000].reverse(),
+                  })}
+                  options={stackLineChartOptions}
+                />
+                <CardBody
+                  className="text-primary"
+                  style={{ position: 'absolute', right: 0 }}
+                >
+                  <CardTitle>
+                    <MdInsertChart /> Profit
+                  </CardTitle>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row> */}
+
+        {/* <Row>
           <Col lg="4" md="12" sm="12" xs="12">
             <InfiniteCalendar
               selected={today}
@@ -401,7 +427,7 @@ class DashboardPage extends React.Component {
           <Col lg="4" md="12" sm="12" xs="12">
             <TodosCard todos={todosData} />
           </Col>
-        </Row>
+        </Row> */}
       </Page>
     );
   }

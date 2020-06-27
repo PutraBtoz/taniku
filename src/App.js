@@ -45,6 +45,7 @@ const LaporPage = React.lazy(() => import('pages/LaporPage'));
 const KelolaSultanku = React.lazy(() => import('pages/KelolaSultanku'));
 const BeritaSultanku = React.lazy(() => import('pages/BeritaSultanku'));
 const UsersSultanku = React.lazy(() => import('pages/UsersSultanku'));
+const Konsultasi = React.lazy(() => import('pages/Konsultasi'));
 
 const getBasename = () => {
   return `/${process.env.PUBLIC_URL.split('/').pop()}`;
@@ -125,6 +126,7 @@ class App extends React.Component {
                     <Route exact path="/kelola" component={KelolaSultanku} /> 
                     <Route exact path="/berita" component={BeritaSultanku} /> 
                     <Route exact path="/users" component={UsersSultanku} /> 
+                    <Route exact path="/konsultasi" component={Konsultasi} /> 
                     <Route
                       exact
                       path="/button-groups"

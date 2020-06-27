@@ -92,7 +92,7 @@ const pageContents = [
   //   Icon: MdViewCarousel,
   // },
   { to: '/users', name: 'pengguna sultanku', exact: false, Icon: MdAccountCircle },
-  { to: '/login', name: 'kelola taniku', exact: false, Icon: MdAccountCircle },
+  { to: '/konsultasi', name: 'konsulasi taniku', exact: false, Icon: MdAssignment },
   { to: '/login', name: 'harga taniku', exact: false, Icon: MdAccountCircle },
   { to: '/login', name: 'lapor taniku', exact: false, Icon: MdAccountCircle },
   // {

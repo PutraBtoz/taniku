@@ -11,6 +11,7 @@
     "d3-geo": "^1.11.3",
     "dateformat": "^3.0.3",
     "faker": "^4.1.0",
+    "file-saver": "^2.0.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-big-calendar": "^0.24.1",
@@ -29,7 +30,8 @@
     "react-sizeme": "^2.5.2",
     "react-tooltip": "^4.2.5",
     "reactstrap": "^7.1.0",
-    "victory": "^32.0.0"
+    "victory": "^32.0.0",
+    "xlsx": "^0.16.1"
   },
   "devDependencies": {
     "gh-pages": "^1.2.0",

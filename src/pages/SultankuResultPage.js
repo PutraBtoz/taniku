@@ -1,4 +1,5 @@
 import Page from 'components/Page';
+import ReactDOM from "react-dom"
 import React, { useReducer } from 'react';
 import axios from 'axios';
 import {
@@ -15,10 +16,20 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  Input,
+  CustomInput,
+  Form,
 } from 'reactstrap';
+import {
+  MdSearch,
+} from 'react-icons/md';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Line, Pie, Doughnut, Bar, Radar, Polar } from 'react-chartjs-2';
+import { getColor } from 'utils/colors';
 import { getUser } from '../utils/Common';
+import XLSX from "xlsx"
+import * as FileSaver from "file-saver"
 
 // const doLog = (req) => {
 //   console.log(req)
@@ -98,14 +109,33 @@ const getCountPercentage = (v1, v2, v3, v4, where) => {
   const maxResultPercentage = [MaxResult1, MaxResult2, MaxResult3, MaxResult4]
   sessionStorage.setItem("percentage"+where, JSON.stringify(resultPercentage))
   sessionStorage.setItem("maxPercentage"+where, JSON.stringify(maxResultPercentage))
-}
+};
+
+const genPieData = (where) => {
+  let dataPie = JSON.parse(sessionStorage.getItem("percentage"+where))
+
+  return {
+    datasets: [
+      {
+        data: dataPie,
+        backgroundColor: [
+          getColor('primary'),
+          getColor('secondary'),
+          getColor('success'),
+          getColor('info'),
+        ],
+        label: 'Dataset 1',
+      },
+    ],
+    labels: ['Musim', 'Tanah', 'Ketinggian', 'Cuaca'],
+  };
+};
+
 
 const user = getUser();
 
 class FormPage extends React.Component {
   componentDidMount() {
-    console.log(sessionStorage)
-    // doLog("HAHAHAHAHHAHAA")
     axios.get(`http://localhost:4000/api/komoditi`)
     .then(res => this.setState({komoditi: res.data}))
   }
@@ -115,12 +145,17 @@ class FormPage extends React.Component {
     modal_info: false,
     modal_tanam: false,
     modal_tanam_parent: false,
+    modal_export: false,
     selectedTanaman: '',
     selectedAnalisa: [],
     selectedId: '',
     totalPercentage: 0,
     maxPercentage: [],
-    komoditi: []
+    komoditi: [],
+    filteredData: [],
+    value: "",
+    fileName: "",
+    fileFormat: "xlsx",
   };
 
   handleChange = date => {
@@ -150,6 +185,10 @@ class FormPage extends React.Component {
     });
   };
 
+  toggleExport = () => {
+    this.setState({ modal_export: !this.state.modal_export })
+  }
+
   addTanam = (tanaman, toggle) => () => {
     axios.post('http://localhost:4000/api/tanam/' + user.id, { 
       startDate: this.state.startDate, 
@@ -165,7 +204,87 @@ class FormPage extends React.Component {
     });
   }
 
+  handleFilter = e => {
+    let data = this.state.komoditi
+    let filteredData = []
+    let value = e.target.value
+    this.setState({ value })
+    if (value.length) {
+      filteredData = data.filter(col => {
+        let startsWithCondition =
+          col.name.toLowerCase().startsWith(value.toLowerCase()) ||
+          col.id
+            .toString()
+            .toLowerCase()
+            .startsWith(value.toLowerCase())
+
+        let includesCondition =
+          col.name.toLowerCase().includes(value.toLowerCase()) ||
+          col.id
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+
+        if (startsWithCondition) return startsWithCondition
+        else if (!startsWithCondition && includesCondition)
+          return includesCondition
+        else return null
+      })
+      this.setState({ value, filteredData })
+    }
+  }
+
+  handleExport = () => {
+    this.toggle()
+    let table = ReactDOM.findDOMNode(this.tableRef)
+    let bookType = this.state.fileFormat.length ? this.state.fileFormat : "xlsx"
+    let wb = XLSX.utils.table_to_book(table, { sheet: "Sheet JS" })
+    let wbout = XLSX.write(wb, { bookType, bookSST: true, type: "binary" })
+
+    const s2ab = s => {
+      var buf = new ArrayBuffer(s.length)
+      var view = new Uint8Array(buf)
+      for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff
+      return buf
+    }
+    let file =
+      this.state.fileFormat.length && this.state.fileFormat.length
+        ? `${this.state.fileName}.${this.state.fileFormat}`
+        : this.state.fileName.length
+        ? `${this.state.fileName}.xlsx`
+        : this.state.fileFormat.length
+        ? `excel-sheet.${this.state.fileFormat}`
+        : "excel-sheet.xlsx"
+
+    return FileSaver.saveAs(
+      new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
+      file
+    )
+  }
+
   render() {
+    let array = this.state.value ? this.state.filteredData : this.state.komoditi
+    let renderTableData = array.map((komoditi,i) => {
+      return (
+        <tr key={komoditi.id}>
+          <th scope="row">{i + 1}</th>
+          <td>{komoditi.name}</td>
+          <th style={{textAlign: 'center'}}>
+              <Doughnut data={genPieData(komoditi.id)} width={800}/>
+              {getCertaintyFactor(
+              komoditi.v_musim,
+              komoditi.v_tanah,
+              komoditi.v_tinggi,
+              komoditi.v_suhu,
+              komoditi.id)} %
+          </th>
+          <td>3 - 4 bulan</td>
+            <td>30 - 31 ton/hektare</td>
+            <td><Button type='button' color='info' onClick={this.toggle('analisa', komoditi.name, komoditi.id)}>Lihat</Button></td>
+            <td><Button type='button' onClick={this.toggle('tanam_parent', komoditi.name, komoditi.id)}>Tanam</Button></td>
+        </tr>
+      )
+    })
     return (
       <Page title="Hasil SultanKu" breadcrumbs={[{ name: 'SultanKu', active: true }]}>
         <Row>
@@ -218,15 +337,32 @@ class FormPage extends React.Component {
 
 
                     <Card className="mb-3">
-                      <CardHeader>Hasil</CardHeader>
+                    <CardHeader className="d-flex flex-wrap justify-content-between mb-1">
+                      <Label>Hasil</Label>
+                      <div inline className="cr-search-form">
+                        <MdSearch
+                          size="20"
+                          className="cr-search-form__icon-search text-secondary"
+                          style={{top: 8}}
+                        />
+                        <Input
+                          type="search"
+                          className="cr-search-form__input"
+                          value={this.state.value}
+                          onChange={e => this.handleFilter(e)}
+                          placeholder="Search..."
+                        />
+                      </div>
+                      <Button onClick={this.toggleExport}>Export as CSV</Button>
+                    </CardHeader>
                       <CardBody>
-                        <Table responsive>
+                        <Table innerRef={el => (this.tableRef = el)} responsive>
                           <thead>
                             <tr>
                               <th>#</th>
                               <th>Komoditi</th>
-                              <th>Tingkat rekomendasi</th>
-                              {/* <th>Perawatan</th> */}
+                              {/* <th>Tingkat rekomendasi</th> */}
+                              <th style={{textAlign: 'center'}}>Tingkat rekomendasi</th>
                               <th>Masa Panen</th>
                               <th>Hasil</th>
                               <th>Analisa</th>
@@ -234,23 +370,7 @@ class FormPage extends React.Component {
                             </tr>
                           </thead>
                           <tbody>
-                            {this.state.komoditi.map((komoditi, i) => (
-                            <tr key={komoditi.id}>
-                              <th scope="row">{i + 1}</th>
-                              <td>{komoditi.name}</td>
-                              <th>{getCertaintyFactor(
-                                komoditi.v_musim,
-                                komoditi.v_tanah,
-                                komoditi.v_tinggi,
-                                komoditi.v_suhu,
-                                komoditi.id)} %</th>
-                              {/* <td>Kasih pupuk rutin 3 hari</td> */}
-                              <td>3 - 4 bulan</td>
-                              <td>30 - 31 ton/hektare</td>
-                              <td><Button type='button' color='info' onClick={this.toggle('analisa', komoditi.name, komoditi.id)}>Lihat</Button></td>
-                              <td><Button type='button' onClick={this.toggle('tanam_parent', komoditi.name, komoditi.id)}>Tanam</Button></td>
-                            </tr>
-                            ))}
+                            {renderTableData}
                           </tbody>
                         </Table>
 
@@ -389,6 +509,43 @@ class FormPage extends React.Component {
                             </Button>{' '}
                             <Button color="primary" onClick={this.toggle('tanam_parent', this.state.selectedTanaman, this.state.selectedId)}>
                               Close
+                            </Button>
+                          </ModalFooter>
+                        </Modal>
+
+                        <Modal
+                          isOpen={this.state.modal_export}
+                          toggle={this.toggleExport}
+                          className="modal-dialog-centered">
+                          <ModalHeader toggle={this.toggleModal}>Export To Excel</ModalHeader>
+                          <ModalBody>
+                            <FormGroup>
+                              <Input
+                                type="text"
+                                value={this.state.fileName}
+                                onChange={e => this.setState({ fileName: e.target.value })}
+                                placeholder="Enter File Name"
+                              />
+                            </FormGroup>
+                            <FormGroup>
+                              <CustomInput
+                                type="select"
+                                id="selectFileFormat"
+                                name="customSelect"
+                                value={this.state.fileFormat}
+                                onChange={e => this.setState({ fileFormat: e.target.value })}>
+                                <option>xlsx</option>
+                                <option>csv</option>
+                                {/* <option>txt</option> */}
+                              </CustomInput>
+                            </FormGroup>
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button color="primary" onClick={this.handleExport}>
+                              Export
+                            </Button>
+                            <Button color="flat-danger" onClick={this.toggleExport}>
+                              Cancel
                             </Button>
                           </ModalFooter>
                         </Modal>

@@ -28,14 +28,14 @@ import axios from 'axios';
 
 class FormPage extends React.Component {
   componentDidMount() {
-    axios.get(`http://localhost:4000/api/users`)
-    .then(res => this.setState({users: res.data}))
+    axios.get(`http://localhost:4000/api/konsultasi`)
+    .then(res => this.setState({konsultasi: res.data}))
   }
 
   state = {
     modal_edit: false,
     modal_export: false,
-    users: [],
+    konsultasi: [],
     filteredData: [],
     selectedData: {},
     value: "",
@@ -70,25 +70,33 @@ class FormPage extends React.Component {
   };
 
   handleFilter = e => {
-    let data = this.state.users
+    let data = this.state.konsultasi
     let filteredData = []
     let value = e.target.value
     this.setState({ value })
     if (value.length) {
       filteredData = data.filter(col => {
         let startsWithCondition =
-          col.name.toLowerCase().startsWith(value.toLowerCase()) ||
-          col.id
-            .toString()
-            .toLowerCase()
-            .startsWith(value.toLowerCase())
+        col.id
+          .toString()
+          .toLowerCase()
+          .startsWith(value.toLowerCase()) ||
+        col.konselor.toLowerCase().startsWith(value.toLowerCase()) ||
+        col.musim.toLowerCase().startsWith(value.toLowerCase()) ||
+        col.ketinggian.toLowerCase().startsWith(value.toLowerCase()) ||
+        col.tanah.toLowerCase().startsWith(value.toLowerCase()) ||
+        col.suhu.toLowerCase().startsWith(value.toLowerCase())
 
         let includesCondition =
-          col.name.toLowerCase().includes(value.toLowerCase()) ||
-          col.id
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
+        col.id
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase()) ||
+        col.konselor.toLowerCase().includes(value.toLowerCase()) ||
+        col.musim.toLowerCase().includes(value.toLowerCase()) ||
+        col.ketinggian.toLowerCase().includes(value.toLowerCase()) ||
+        col.tanah.toLowerCase().includes(value.toLowerCase()) ||
+        col.suhu.toLowerCase().includes(value.toLowerCase())
 
         if (startsWithCondition) return startsWithCondition
         else if (!startsWithCondition && includesCondition)
@@ -140,8 +148,8 @@ class FormPage extends React.Component {
     })
     .then(response => {
       toggle()
-      axios.get(`http://localhost:4000/api/users`)
-      .then(res => this.setState({users: res.data}))
+      axios.get(`http://localhost:4000/api/konsultasi`)
+      .then(res => this.setState({konsultasi: res.data}))
     })
     .catch(response => {
       console.log(response)
@@ -152,8 +160,8 @@ class FormPage extends React.Component {
     axios.delete("http://localhost:4000/api/delete-user/" + this.state.selectedData.id)
     .then(response => {
       toggle()
-      axios.get(`http://localhost:4000/api/users`)
-      .then(res => this.setState({users: res.data}))
+      axios.get(`http://localhost:4000/api/konsultasi`)
+      .then(res => this.setState({konsultasi: res.data}))
     })
     .catch(response => {
       console.log(response)
@@ -174,8 +182,8 @@ class FormPage extends React.Component {
       .then(response => {
         toggle()
         console.log(response)
-        axios.get(`http://localhost:4000/api/users`)
-        .then(res => this.setState({users: res.data}))
+        axios.get(`http://localhost:4000/api/konsultasi`)
+        .then(res => this.setState({konsultasi: res.data}))
       })
       .catch(response => {
         console.log(response)
@@ -188,15 +196,16 @@ class FormPage extends React.Component {
   }
 
   render() {
-    let array = this.state.value ? this.state.filteredData : this.state.users
+    let array = this.state.value ? this.state.filteredData : this.state.konsultasi
     let renderTableData = array.map((user ,i) => {
       return (
         <tr key={user.id}>
           <th scope="row">{i + 1}</th>
-          <td>{user.username}</td>
-          <td>{user.password}</td>
-          <td>{user.email}</td>
-          <td>{user.name}</td>
+          <td>{user.konselor}</td>
+          <td>{user.musim}</td>
+          <td>{user.ketinggian}</td>
+          <td>{user.tanah}</td>
+          <td>{user.suhu} °C</td>
           <td>
             <Button type='button' onClick={this.toggle('edit', user)}>Ubah</Button>
             <Button className="ml-1" color="danger" type='button' onClick={this.toggle('delete', user)}>Hapus</Button>
@@ -205,7 +214,7 @@ class FormPage extends React.Component {
       )
     })
     return (
-      <Page title="Users" breadcrumbs={[{ name: 'Users', active: true }]}>
+      <Page title="List Konsultasi" breadcrumbs={[{ name: 'Konsultasi', active: true }]}>
         <Row>
           <Col>
             <Card>
@@ -232,10 +241,11 @@ class FormPage extends React.Component {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Username</th>
-                      <th>Password</th>
-                      <th>Email</th>
-                      <th>Name</th>
+                      <th>Konselor</th>
+                      <th>Musim</th>
+                      <th>Ketinggian</th>
+                      <th>Tanah</th>
+                      <th>Suhu</th>
                       <th>Aksi</th>
                     </tr>
                   </thead>
@@ -243,7 +253,7 @@ class FormPage extends React.Component {
                     {renderTableData}
                   </tbody>
                   <tfoot>
-                    <Button color="primary" type='button' onClick={this.toggle('add')}>Tambah User</Button>
+                    <Button color="primary" type='button' onClick={this.toggle('add')}>Tambah Konsultasi</Button>
                   </tfoot>
                 </Table>
 

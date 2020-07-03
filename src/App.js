@@ -46,6 +46,16 @@ const KelolaSultanku = React.lazy(() => import('pages/KelolaSultanku'));
 const BeritaSultanku = React.lazy(() => import('pages/BeritaSultanku'));
 const UsersSultanku = React.lazy(() => import('pages/UsersSultanku'));
 const Konsultasi = React.lazy(() => import('pages/Konsultasi'));
+const HargaAdmin = React.lazy(() => import('pages/HargaAdmin'));
+const ListKomoditi = React.lazy(() => import('pages/ListKomoditi'));
+const ListHama = React.lazy(() => import('pages/ListHama'));
+const ListPenyakit = React.lazy(() => import('pages/ListPenyakit'));
+const ListPupuk = React.lazy(() => import('pages/ListPupuk'));
+const AdminAgenda = React.lazy(() => import('pages/AgendaAdmin'));
+const AdminKomoditi = React.lazy(() => import('pages/ListKomoditiAdmin'));
+const AdminHama = React.lazy(() => import('pages/ListHamaAdmin'));
+const AdminPenyakit = React.lazy(() => import('pages/ListPenyakitAdmin'));
+const AdminPupuk = React.lazy(() => import('pages/ListPupukAdmin'));
 
 const getBasename = () => {
   return `/${process.env.PUBLIC_URL.split('/').pop()}`;
@@ -127,6 +137,16 @@ class App extends React.Component {
                     <Route exact path="/berita" component={BeritaSultanku} /> 
                     <Route exact path="/users" component={UsersSultanku} /> 
                     <Route exact path="/konsultasi" component={Konsultasi} /> 
+                    {/* <Route exact path="/harga-admin" component={HargaAdmin} />  */}
+                    <Route exact path="/list-komoditi" component={ListKomoditi} /> 
+                    <Route exact path="/admin-komoditi" component={AdminKomoditi} /> 
+                    <Route exact path="/list-hama" component={ListHama} /> 
+                    <Route exact path="/admin-hama" component={AdminHama} /> 
+                    <Route exact path="/list-penyakit" component={ListPenyakit} /> 
+                    <Route exact path="/admin-penyakit" component={AdminPenyakit} /> 
+                    <Route exact path="/list-pupuk" component={ListPupuk} /> 
+                    <Route exact path="/admin-pupuk" component={AdminPupuk} /> 
+                    <Route exact path="/agenda-admin" component={AdminAgenda} /> 
                     <Route
                       exact
                       path="/button-groups"

@@ -30,9 +30,18 @@ class FormPage extends React.Component {
   componentDidMount() {
     axios.get(`http://localhost:4000/api/konsultasi`)
     .then(res => this.setState({konsultasi: res.data}))
+    axios.get(`http://localhost:4000/api/musim`)
+    .then(res => this.setState({musim: res.data}))
+    axios.get(`http://localhost:4000/api/ketinggian`)
+    .then(res => this.setState({ketinggian: res.data}))
+    axios.get(`http://localhost:4000/api/tanah`)
+    .then(res => this.setState({tanah: res.data}))
   }
 
   state = {
+    musim: [],
+    ketinggian: [],
+    tanah: [],
     modal_edit: false,
     modal_export: false,
     konsultasi: [],
@@ -49,7 +58,6 @@ class FormPage extends React.Component {
   };
 
   toggle = (modalType, selected) => () => {
-    console.log(modalType);
     if (!modalType) {
       return this.setState({
         modal_edit: !this.state.modal_edit,
@@ -140,11 +148,11 @@ class FormPage extends React.Component {
   }
 
   handleSave = (toggle) => {
-    axios.put("http://localhost:4000/api/update-user/" + this.state.selectedData.id, {
-      username: this.state.selectedData.username,
-      email: this.state.selectedData.email,
-      name: this.state.selectedData.name,
-      password: this.state.selectedData.password,
+    axios.put("http://localhost:4000/api/update-konsultasi/" + this.state.selectedData.id, {
+      musim: this.state.selectedData.musim,
+      ketinggian: this.state.selectedData.ketinggian,
+      tanah: this.state.selectedData.tanah,
+      suhu: this.state.selectedData.suhu,
     })
     .then(response => {
       toggle()
@@ -157,7 +165,7 @@ class FormPage extends React.Component {
   }
 
   handleDelete = (toggle) => {
-    axios.delete("http://localhost:4000/api/delete-user/" + this.state.selectedData.id)
+    axios.delete("http://localhost:4000/api/delete-konsultasi/" + this.state.selectedData.id)
     .then(response => {
       toggle()
       axios.get(`http://localhost:4000/api/konsultasi`)
@@ -193,6 +201,18 @@ class FormPage extends React.Component {
 
   handleChange = (e) => {
     this.setState({isAdmin: e.target.value})
+  }
+
+  handleChange = (where, e) => {
+    if(where === 'valueMusim'){
+      this.setState({ selectedData: {...this.state.selectedData, musim: e.target.value }})
+    }
+    if(where === 'valueKetinggian'){
+      this.setState({ selectedData: {...this.state.selectedData, ketinggian: e.target.value }})
+    }
+    if(where === 'valueKondisiTanah'){
+      this.setState({ selectedData: {...this.state.selectedData, tanah: e.target.value }})
+    }
   }
 
   render() {
@@ -252,9 +272,9 @@ class FormPage extends React.Component {
                   <tbody>
                     {renderTableData}
                   </tbody>
-                  <tfoot>
+                  {/* <tfoot>
                     <Button color="primary" type='button' onClick={this.toggle('add')}>Tambah Konsultasi</Button>
-                  </tfoot>
+                  </tfoot> */}
                 </Table>
 
                 <Modal
@@ -264,43 +284,48 @@ class FormPage extends React.Component {
                   <ModalHeader toggle={this.toggle('edit')}>Ubah data</ModalHeader>
                   <ModalBody>
                     <FormGroup>
-                      <Label for="exampleEmail">Username</Label>
+                      <Label for="exampleEmail">Konselor</Label>
                       <Input
                         type="text"
                         name="name"
-                        defaultValue={this.state.selectedData.username}
-                        placeholder="username"
-                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, username: e.target.value }})}
+                        defaultValue={this.state.selectedData.konselor}
+                        placeholder="konselor"
+                        disabled
+                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, konselor: e.target.value }})}
                       />
                     </FormGroup>
                     <FormGroup>
-                      <Label for="exampleEmail">Email</Label>
-                      <Input
-                        type="text"
-                        name="name"
-                        defaultValue={this.state.selectedData.email}
-                        placeholder="Email"
-                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, email: e.target.value }})}
-                      />
+                      <Label for="exampleEmail">Musim</Label>
+                      <Input type="select" name="komoditi" defaultValue={this.state.selectedData.musim} onChange={(e) => this.handleChange("valueMusim", e)}>
+                        {this.state.musim.map(musim => (
+                          <option key={musim.id} value={musim.name}>{musim.name}</option>
+                        ))}
+                      </Input>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="exampleEmail">Name</Label>
-                      <Input
-                        type="text"
-                        name="name"
-                        defaultValue={this.state.selectedData.name}
-                        placeholder="Name"
-                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, name: e.target.value }})}
-                      />
+                      <Label for="exampleEmail">Ketinggian</Label>
+                      <Input type="select" name="komoditi" defaultValue={this.state.selectedData.ketinggian} onChange={(e) => this.handleChange("valueKetinggian", e)}>
+                        {this.state.ketinggian.map(ketinggian => (
+                          <option key={ketinggian.id} value={ketinggian.name}>{ketinggian.name}</option>
+                        ))}
+                      </Input>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="exampleEmail">Password</Label>
+                      <Label for="exampleEmail">Tanah</Label>
+                      <Input type="select" name="komoditi" defaultValue={this.state.selectedData.tanah} onChange={(e) => this.handleChange("valueKondisiTanah", e)}>
+                        {this.state.tanah.map(tanah => (
+                          <option key={tanah.id} value={tanah.name}>{tanah.name}</option>
+                        ))}
+                      </Input>
+                    </FormGroup>
+                    <FormGroup>
+                      <Label for="exampleEmail">Suhu</Label>
                       <Input
                         type="text"
                         name="name"
-                        defaultValue={this.state.selectedData.password}
-                        placeholder="Password"
-                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, password: e.target.value }})}
+                        defaultValue={this.state.selectedData.suhu}
+                        placeholder="suhu"
+                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, suhu: e.target.value }})}
                       />
                     </FormGroup>
                   </ModalBody>
@@ -318,7 +343,7 @@ class FormPage extends React.Component {
                   isOpen={this.state.modal_delete}
                   toggle={this.toggle('delete')}
                   className={this.props.className}>
-                  <ModalHeader toggle={this.toggle('delete')}>Ubah data</ModalHeader>
+                  <ModalHeader toggle={this.toggle('delete')}>Hapus data</ModalHeader>
                   <ModalBody>
                     Apakah anda yakin untuk menghapus data ini ?
                   </ModalBody>
@@ -332,7 +357,7 @@ class FormPage extends React.Component {
                   </ModalFooter>
                 </Modal>
 
-                <Modal
+                {/* <Modal
                   isOpen={this.state.modal_add}
                   toggle={this.toggle('add')}
                   className={this.props.className}>
@@ -394,7 +419,7 @@ class FormPage extends React.Component {
                       Close
                     </Button>
                   </ModalFooter>
-                </Modal>
+                </Modal> */}
 
                 <Modal
                   isOpen={this.state.modal_export}

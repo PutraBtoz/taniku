@@ -71,8 +71,14 @@ class AuthForm extends React.Component {
     }).catch(error => {
       this.setState({loading: false});
       console.log(error.response)
-      if (error.response.status === 401) this.setState({error: error.response.data.message});
-      else this.setState({error: "Something went wrong. Please try again later."});
+      if (error.response) {
+      this.setState({error: error.response.data.message});
+      alert(error.response.data.message)
+      } 
+      else {
+        this.setState({error: "Something went wrong. Please try again later."});
+        alert("Something went wrong. Please try again later.")
+      }
     });
   }
 
@@ -81,11 +87,16 @@ class AuthForm extends React.Component {
     axios.post('http://localhost:4000/users/register', { username: this.state.username, password: this.state.password, email: this.state.email }).then(response => {
       this.setState({loading: false});
       this.props.history.push('/login');
+      alert("Registrasi berhasil, silahkan cek email anda")
     }).catch(error => {
       this.setState({loading: false});
       console.log(error.response)
-      if (error.response.status === 401) this.setState({error: error.response.data.message});
-      else this.setState({error: "Something went wrong. Please try again later."});
+      if (error.response.status === 401) {
+        this.setState({error: error.response.data.message})
+      }
+      else {
+        this.setState({error: "Something went wrong. Please try again later."});
+      }
     });
   }
 

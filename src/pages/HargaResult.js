@@ -26,7 +26,8 @@ const FormPage = () => {
                       Komoditi
                     </Label>
                     <Label for="resultNama" sm={5}>
-                      Ubi jalar cilembu
+                      {/* Ubi jalar cilembu */}
+                      {sessionStorage.getItem('hargaKomoditi')}
                     </Label>
                   </FormGroup>
                   <FormGroup row>
@@ -34,7 +35,8 @@ const FormPage = () => {
                       Tanggal
                     </Label>
                     <Label for="resultNama" sm={5}>
-                      04/16/2020
+                      {/* 04/16/2020 */}
+                      {sessionStorage.getItem('tanggalHarga')}
                     </Label>
                   </FormGroup>
 
@@ -52,17 +54,27 @@ const FormPage = () => {
                           <tr>
                             <th scope="row">1</th>
                             <td>Madiun</td>
-                            <td>Rp 100.000 - Rp 110.000 / kg</td>
+                            <td>± Rp 1{Math.floor(Math.random() * 10)}0.000 / kg</td>
                           </tr>
                           <tr>
                             <th scope="row">2</th>
                             <td>Malang</td>
-                            <td>Rp 95.000 - Rp 100.000 / kg</td>
+                            <td>± Rp 9{Math.floor(Math.random() * 4) + 5}.000 / kg</td>
                           </tr>
                           <tr>
                             <th scope="row">3</th>
                             <td>Surabaya</td>
-                            <td>Rp 110.000 - Rp 120.000 / kg</td>
+                            <td>± Rp 1{Math.floor(Math.random() * 6) + 3}0.000 / kg</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">3</th>
+                            <td>Jakarta</td>
+                            <td>± Rp 1{Math.floor(Math.random() * 2) + 7}0.000 / kg</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">3</th>
+                            <td>Yogyakarta</td>
+                            <td>± Rp {Math.floor(Math.random() * 3) + 7}{Math.floor(Math.random() * 10)}.000 / kg</td>
                           </tr>
                         </tbody>
                       </Table>

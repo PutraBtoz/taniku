@@ -35,6 +35,9 @@ import {
   MdAssignment,
   MdInfo,
   MdMonetizationOn,
+  MdBook,
+  MdLibraryBooks,
+  MdCollectionsBookmark,
 } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import {
@@ -91,10 +94,14 @@ const pageContents = [
   //   exact: false,
   //   Icon: MdViewCarousel,
   // },
-  { to: '/users', name: 'pengguna sultanku', exact: false, Icon: MdAccountCircle },
+  { to: '/users', name: 'pengguna taniku', exact: false, Icon: MdAccountCircle },
   { to: '/konsultasi', name: 'konsulasi taniku', exact: false, Icon: MdAssignment },
-  { to: '/login', name: 'harga taniku', exact: false, Icon: MdAccountCircle },
-  { to: '/login', name: 'lapor taniku', exact: false, Icon: MdAccountCircle },
+  // { to: '/agenda-admin', name: 'agenda taniku', exact: false, Icon: MdEventAvailable },
+  { to: '/admin-komoditi', name: 'komoditi taniku', exact: false, Icon: MdCollectionsBookmark },
+  { to: '/admin-hama', name: 'hama taniku', exact: false, Icon: MdCollectionsBookmark },
+  { to: '/admin-penyakit', name: 'penyakit taniku', exact: false, Icon: MdCollectionsBookmark },
+  { to: '/admin-pupuk', name: 'pupuk taniku', exact: false, Icon: MdCollectionsBookmark },
+  // { to: '/login', name: 'lapor taniku', exact: false, Icon: MdAccountCircle },
   // {
   //   to: '/login-modal',
   //   name: 'login modal',
@@ -103,13 +110,21 @@ const pageContents = [
   // },
 ];
 
+const pageContentsBuku = [
+  { to: '/list-komoditi', name: 'list komoditi', exact: false, Icon: MdCollectionsBookmark },
+  { to: '/list-pupuk', name: 'list pupuk', exact: false, Icon: MdCollectionsBookmark },
+  { to: '/list-hama', name: 'list hama', exact: false, Icon: MdCollectionsBookmark },
+  { to: '/list-penyakit', name: 'list penyakit', exact: false, Icon: MdCollectionsBookmark },
+  // {
+];
+
 const navItems = [
   { to: '/', name: 'dashboard', exact: true, Icon: MdDashboard },
   { to: '/sultanku', name: 'sultanku', exact: false, Icon: MdQuestionAnswer },
   { to: '/agenda', name: 'agenda taniku', exact: false, Icon: MdSchedule },
   { to: '/harga', name: 'harga taniku', exact: false, Icon: MdMonetizationOn },
-  { to: '/sigap', name: 'sigap taniku', exact: false, Icon: MdHealing },
-  { to: '/lapor', name: 'lapor taniku', exact: false, Icon: MdLiveHelp },
+  // { to: '/sigap', name: 'sigap taniku', exact: false, Icon: MdHealing },
+  // { to: '/lapor', name: 'buku taniku', exact: false, Icon: MdLiveHelp },
   { to: '/kelola', name: 'kelola taniku', exact: false, Icon: MdEventAvailable },
   { to: '/berita', name: 'berita taniku', exact: false, Icon: MdAssignment },
   // { to: '/cards', name: 'mimin taniku', exact: false, Icon: MdWeb },
@@ -120,7 +135,7 @@ const navItems = [
 
 const onlyAdmin = [
   { to: '/', name: 'dashboard', exact: true, Icon: MdDashboard },
-  { to: '/pakarku', name: 'pakar sultanku', exact: false, Icon: MdWeb },
+  // { to: '/pakarku', name: 'pakar sultanku', exact: false, Icon: MdWeb },
 ];
 
 const bem = bn.create('sidebar');
@@ -178,6 +193,49 @@ class Sidebar extends React.Component {
                 </BSNavLink>
               </NavItem>
             ))}
+            {user.isAdmin === 0 && 
+            <React.Fragment>
+              <NavItem
+                className={bem.e('nav-item')}
+                onClick={this.handleClick('Pages')}
+              >
+                <BSNavLink className={bem.e('nav-item-collapse')}>
+                  <div className="d-flex">
+                    <MdBook className={bem.e('nav-item-icon')} />
+                    <span className="">BUKU TANIKU</span>
+                  </div>
+                  <MdKeyboardArrowDown
+                    className={bem.e('nav-item-icon')}
+                    style={{
+                      padding: 0,
+                      transform: this.state.isOpenPages
+                        ? 'rotate(0deg)'
+                        : 'rotate(-90deg)',
+                      transitionDuration: '0.3s',
+                      transitionProperty: 'transform',
+                    }}
+                  />
+                </BSNavLink>
+              </NavItem>
+              <Collapse isOpen={this.state.isOpenPages}>
+                {pageContentsBuku.map(({ to, name, exact, Icon }, index) => (
+                  <NavItem key={index} className={bem.e('nav-item')}>
+                    <BSNavLink
+                      id={`navItem-${name}-${index}`}
+                      className="text-uppercase"
+                      tag={NavLink}
+                      to={to}
+                      activeClassName="active"
+                      exact={exact}
+                    >
+                      <Icon className={bem.e('nav-item-icon')} />
+                      <span className="">{name}</span>
+                    </BSNavLink>
+                  </NavItem>
+                ))}
+              </Collapse>
+            </React.Fragment>
+            }
 
             {/* <NavItem
               className={bem.e('nav-item')}
@@ -282,7 +340,7 @@ class Sidebar extends React.Component {
               <BSNavLink className={bem.e('nav-item-collapse')}>
                 <div className="d-flex">
                   <MdPages className={bem.e('nav-item-icon')} />
-                  <span className="">Mimin taniku</span>
+                  <span className="">MIMIN TANIKU</span>
                 </div>
                 <MdKeyboardArrowDown
                   className={bem.e('nav-item-icon')}

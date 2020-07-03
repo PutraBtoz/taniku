@@ -28,24 +28,22 @@ import axios from 'axios';
 
 class FormPage extends React.Component {
   componentDidMount() {
-    axios.get(`http://localhost:4000/api/users`)
-    .then(res => this.setState({users: res.data}))
+    axios.get(`http://localhost:4000/api/hama`)
+    .then(res => this.setState({hama: res.data}))
   }
 
   state = {
     modal_edit: false,
     modal_export: false,
-    users: [],
+    hama: [],
     filteredData: [],
     selectedData: {},
     value: "",
     fileName: "",
     fileFormat: "xlsx",
-    username: "",
-    email: "",
     name: "",
-    password: "",
-    isAdmin: 1,
+    ciri: "",
+    pengendalian: "",
   };
 
   toggle = (modalType, selected) => () => {
@@ -58,10 +56,9 @@ class FormPage extends React.Component {
 
     this.setState({
       [`modal_${modalType}`]: !this.state[`modal_${modalType}`],
-      username: "",
-      email: "",
       name: "",
-      password: ""
+      ciri: "",
+      pengendalian: "",
     });
 
     if(selected){
@@ -70,7 +67,7 @@ class FormPage extends React.Component {
   };
 
   handleFilter = e => {
-    let data = this.state.users
+    let data = this.state.hama
     let filteredData = []
     let value = e.target.value
     this.setState({ value })
@@ -132,16 +129,15 @@ class FormPage extends React.Component {
   }
 
   handleSave = (toggle) => {
-    axios.put("http://localhost:4000/api/update-user/" + this.state.selectedData.id, {
-      username: this.state.selectedData.username,
-      email: this.state.selectedData.email,
+    axios.put("http://localhost:4000/api/update-hama/" + this.state.selectedData.id, {
       name: this.state.selectedData.name,
-      password: this.state.selectedData.password,
+      ciri: this.state.selectedData.ciri,
+      pengendalian: this.state.selectedData.pengendalian,
     })
     .then(response => {
       toggle()
-      axios.get(`http://localhost:4000/api/users`)
-      .then(res => this.setState({users: res.data}))
+      axios.get(`http://localhost:4000/api/hama`)
+      .then(res => this.setState({hama: res.data}))
     })
     .catch(response => {
       console.log(response)
@@ -149,11 +145,11 @@ class FormPage extends React.Component {
   }
 
   handleDelete = (toggle) => {
-    axios.delete("http://localhost:4000/api/delete-user/" + this.state.selectedData.id)
+    axios.delete("http://localhost:4000/api/delete-hama/" + this.state.selectedData.id)
     .then(response => {
       toggle()
-      axios.get(`http://localhost:4000/api/users`)
-      .then(res => this.setState({users: res.data}))
+      axios.get(`http://localhost:4000/api/hama`)
+      .then(res => this.setState({hama: res.data}))
     })
     .catch(response => {
       console.log(response)
@@ -161,21 +157,19 @@ class FormPage extends React.Component {
   }
 
   handleAdd = (toggle) => {
-    if(this.state.username === '' || this.state.email === '' || this.state.name === '' || this.state.password === ''){
+    if(this.state.name === ''){
       alert("Data tidak boleh kosong!")
     } else {
-      axios.post("http://localhost:4000/api/add-user", {
-        username: this.state.username,
-        email: this.state.email,
+      axios.post("http://localhost:4000/api/add-hama", {
         name: this.state.name,
-        password: this.state.password,
-        isAdmin: this.state.isAdmin
+        ciri: this.state.ciri,
+        pengendalian: this.state.pengendalian,
       })
       .then(response => {
         toggle()
         console.log(response)
-        axios.get(`http://localhost:4000/api/users`)
-        .then(res => this.setState({users: res.data}))
+        axios.get(`http://localhost:4000/api/hama`)
+        .then(res => this.setState({hama: res.data}))
       })
       .catch(response => {
         console.log(response)
@@ -188,30 +182,28 @@ class FormPage extends React.Component {
   }
 
   render() {
-    let array = this.state.value ? this.state.filteredData : this.state.users
+    let array = this.state.value ? this.state.filteredData : this.state.hama
     let renderTableData = array.map((user ,i) => {
       return (
         <tr key={user.id}>
           <th scope="row">{i + 1}</th>
-          <td>{user.username}</td>
-          <td>{user.password}</td>
-          <td>{user.email}</td>
           <td>{user.name}</td>
-          <td>{user.isAdmin === 1 ? "Admin" : "Petani"}</td>
+          <td>{user.ciri}</td>
+          <td>{user.pengendalian}</td>
           <td>
             <Button type='button' onClick={this.toggle('edit', user)}>Ubah</Button>
-            <Button className="ml-1" color="danger" type='button' onClick={this.toggle('delete', user)}>Hapus</Button>
+            <Button color="danger" type='button' onClick={this.toggle('delete', user)}>Hapus</Button>
           </td>
         </tr>
       )
     })
     return (
-      <Page title="Users" breadcrumbs={[{ name: 'Users', active: true }]}>
+      <Page title="List Hama" breadcrumbs={[{ name: 'Users', active: true }]}>
         <Row>
           <Col>
             <Card>
               <CardHeader className="d-flex flex-wrap justify-content-between mb-1">
-                <Label>User List</Label>
+                <Label>Hama List</Label>
                 <div inline className="cr-search-form">
                   <MdSearch
                     size="20"
@@ -233,11 +225,9 @@ class FormPage extends React.Component {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Username</th>
-                      <th>Password</th>
-                      <th>Email</th>
-                      <th>Name</th>
-                      <th>Hak Akses</th>
+                      <th>Nama Hama</th>
+                      <th>Ciri - ciri</th>
+                      <th>Pengendalian</th>
                       <th>Aksi</th>
                     </tr>
                   </thead>
@@ -245,7 +235,7 @@ class FormPage extends React.Component {
                     {renderTableData}
                   </tbody>
                   <tfoot>
-                    <Button color="primary" type='button' onClick={this.toggle('add')}>Tambah User</Button>
+                    <Button color="primary" type='button' onClick={this.toggle('add')}>Tambah Hama</Button>
                   </tfoot>
                 </Table>
 
@@ -256,43 +246,33 @@ class FormPage extends React.Component {
                   <ModalHeader toggle={this.toggle('edit')}>Ubah data</ModalHeader>
                   <ModalBody>
                     <FormGroup>
-                      <Label for="exampleEmail">Username</Label>
-                      <Input
-                        type="text"
-                        name="name"
-                        defaultValue={this.state.selectedData.username}
-                        placeholder="username"
-                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, username: e.target.value }})}
-                      />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for="exampleEmail">Email</Label>
-                      <Input
-                        type="text"
-                        name="name"
-                        defaultValue={this.state.selectedData.email}
-                        placeholder="Email"
-                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, email: e.target.value }})}
-                      />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for="exampleEmail">Name</Label>
+                      <Label for="exampleEmail">Nama Hama</Label>
                       <Input
                         type="text"
                         name="name"
                         defaultValue={this.state.selectedData.name}
-                        placeholder="Name"
+                        placeholder="name"
                         onChange={e => this.setState({ selectedData: {...this.state.selectedData, name: e.target.value }})}
                       />
                     </FormGroup>
                     <FormGroup>
-                      <Label for="exampleEmail">Password</Label>
+                      <Label for="exampleEmail">Ciri - ciri</Label>
                       <Input
-                        type="text"
+                        type="textarea"
                         name="name"
-                        defaultValue={this.state.selectedData.password}
-                        placeholder="Password"
-                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, password: e.target.value }})}
+                        defaultValue={this.state.selectedData.ciri}
+                        placeholder="ciri - ciri"
+                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, ciri: e.target.value }})}
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label for="exampleEmail">Pengendalian</Label>
+                      <Input
+                        type="textarea"
+                        name="name"
+                        defaultValue={this.state.selectedData.pengendalian}
+                        placeholder="pengendalian"
+                        onChange={e => this.setState({ selectedData: {...this.state.selectedData, pengendalian: e.target.value }})}
                       />
                     </FormGroup>
                   </ModalBody>
@@ -310,7 +290,7 @@ class FormPage extends React.Component {
                   isOpen={this.state.modal_delete}
                   toggle={this.toggle('delete')}
                   className={this.props.className}>
-                  <ModalHeader toggle={this.toggle('delete')}>Ubah data</ModalHeader>
+                  <ModalHeader toggle={this.toggle('delete')}>Hapus data</ModalHeader>
                   <ModalBody>
                     Apakah anda yakin untuk menghapus data ini ?
                   </ModalBody>
@@ -331,51 +311,34 @@ class FormPage extends React.Component {
                   <ModalHeader toggle={this.toggle('add')}>Tambah data</ModalHeader>
                   <ModalBody>
                     <FormGroup>
-                      <Label for="exampleEmail">Username</Label>
-                      <Input
-                        type="text"
-                        name="name"
-                        defaultValue={this.state.username}
-                        placeholder="username"
-                        onChange={e => this.setState({ username: e.target.value })}
-                      />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for="exampleEmail">Email</Label>
-                      <Input
-                        type="text"
-                        name="name"
-                        defaultValue={this.state.email}
-                        placeholder="Email"
-                        onChange={e => this.setState({ email: e.target.value })}
-                      />
-                    </FormGroup>
-                    <FormGroup>
-                      <Label for="exampleEmail">Name</Label>
+                      <Label for="exampleEmail">Nama Hama</Label>
                       <Input
                         type="text"
                         name="name"
                         defaultValue={this.state.name}
-                        placeholder="Name"
+                        placeholder="nama hama"
                         onChange={e => this.setState({ name: e.target.value })}
                       />
                     </FormGroup>
                     <FormGroup>
-                      <Label for="exampleEmail">Password</Label>
+                      <Label for="exampleEmail">Ciri - ciri</Label>
                       <Input
-                        type="text"
+                        type="textarea"
                         name="name"
-                        defaultValue={this.state.password}
-                        placeholder="Password"
-                        onChange={e => this.setState({ password: e.target.value })}
+                        defaultValue={this.state.ciri}
+                        placeholder="ciri -ciri hama"
+                        onChange={e => this.setState({ ciri: e.target.value })}
                       />
                     </FormGroup>
                     <FormGroup>
-                      <Label for="exampleSelect">Hak Akses</Label>
-                      <Input type="select" name="previlage" onChange={this.handleChange}>
-                        <option value={1}>Admin</option>
-                        <option value={0}>Petani</option>
-                      </Input>
+                      <Label for="exampleEmail">Pengendalian</Label>
+                      <Input
+                        type="textarea"
+                        name="name"
+                        defaultValue={this.state.pengendalian}
+                        placeholder="cara pengendalian"
+                        onChange={e => this.setState({ pengendalian: e.target.value })}
+                      />
                     </FormGroup>
                   </ModalBody>
                   <ModalFooter>

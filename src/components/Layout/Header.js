@@ -93,11 +93,11 @@ class Header extends React.Component {
           </Button>
         </Nav>
         <Nav navbar>
-          <SearchInput />
+          {/* <SearchInput /> */}
         </Nav>
 
         <Nav navbar className={bem.e('nav-right')}>
-          <NavItem className="d-inline-flex">
+          {/* <NavItem className="d-inline-flex">
             <NavLink id="Popover1" className="position-relative">
               {isNotificationConfirmed ? (
                 <MdNotificationsNone
@@ -123,7 +123,7 @@ class Header extends React.Component {
                 <Notifications notificationsData={notificationsData} />
               </PopoverBody>
             </Popover>
-          </NavItem>
+          </NavItem> */}
 
           <NavItem>
             <NavLink id="Popover2">
@@ -143,7 +143,7 @@ class Header extends React.Component {
               <PopoverBody className="p-0 border-light">
                 <UserCard
                   title={user.name}
-                  subtitle="jane@jane.com"
+                  subtitle={user.email}
                   text="Last updated 3 mins ago"
                   className="border-light"
                 >
@@ -151,7 +151,7 @@ class Header extends React.Component {
                     <ListGroupItem tag="button" action className="border-light">
                       <MdPersonPin /> Profile
                     </ListGroupItem>
-                    {!user.isAdmin &&
+                    {/* {!user.isAdmin &&
                     <div>
                     <ListGroupItem tag="button" action className="border-light">
                       <MdInsertChart /> Stats
@@ -166,7 +166,7 @@ class Header extends React.Component {
                       <MdHelp /> Help
                     </ListGroupItem>
                     </div>
-                    }
+                    } */}
                     <ListGroupItem 
                       tag="button" 
                       action 

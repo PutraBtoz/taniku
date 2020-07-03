@@ -197,7 +197,6 @@ class FormPage extends React.Component {
           <td>{user.password}</td>
           <td>{user.email}</td>
           <td>{user.name}</td>
-          <td>{user.isAdmin === 1 ? "Admin" : "Petani"}</td>
           <td>
             <Button type='button' onClick={this.toggle('edit', user)}>Ubah</Button>
             <Button className="ml-1" color="danger" type='button' onClick={this.toggle('delete', user)}>Hapus</Button>
@@ -237,7 +236,6 @@ class FormPage extends React.Component {
                       <th>Password</th>
                       <th>Email</th>
                       <th>Name</th>
-                      <th>Hak Akses</th>
                       <th>Aksi</th>
                     </tr>
                   </thead>

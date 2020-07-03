@@ -227,13 +227,13 @@ export const chartjs = {
       labels: ['January', 'February', 'March', 'April'],
       datasets: [
         {
-          label: 'Consul for this year',
+          label: 'Consul for this month',
           backgroundColor: '#6a82fb',
           stack: 'Expense',
           data: [10, 30, 50, 80],
         },
         {
-          label: 'Consul for last year',
+          label: 'Consul for last month',
           backgroundColor: '#36ce7a',
           stack: 'Expense',
           data: [30, 80, 50, 100],

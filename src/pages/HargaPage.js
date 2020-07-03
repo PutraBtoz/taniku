@@ -30,11 +30,16 @@ class AgendaPage extends React.Component {
     komoditi: []
   };
  
-  handleChange = date => {
+  handleChangeDate = date => {
+    sessionStorage.setItem("tanggalHarga", date)
     this.setState({
       startDate: date
     });
   };
+
+  handleChangeKomoditi = (e) => {
+    sessionStorage.setItem("hargaKomoditi", e.target.value)
+  }
 
   handleSubmit = (e) => {
     e.preventDefault()
@@ -56,9 +61,9 @@ class AgendaPage extends React.Component {
                       Komoditi
                     </Label>
                     <Col sm={10}>
-                      <Input type="select" name="komoditi">
+                      <Input type="select" name="komoditi" onChange={(e) => this.handleChangeKomoditi(e)} >
                         {this.state.komoditi.map(komoditi => (
-                          <option key={komoditi.id}>{komoditi.name}</option>
+                          <option key={komoditi.id} value={komoditi.name}>{komoditi.name}</option>
                         ))}
                       </Input>
                     </Col>
@@ -69,9 +74,10 @@ class AgendaPage extends React.Component {
                     </Label>
                     <Col sm={10}>
                       <DatePicker 
+                        maxDate={new Date()}
                         className='form-control'
                         selected={this.state.startDate}
-                        onChange={this.handleChange}
+                        onChange={this.handleChangeDate}
                       />
                     </Col>
                   </FormGroup>

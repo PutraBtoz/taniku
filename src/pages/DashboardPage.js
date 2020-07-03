@@ -84,7 +84,7 @@ class DashboardPage extends React.Component {
         title="Dashboard"
         breadcrumbs={[{ name: 'Dashboard', active: true }]}
       >
-        <Row>
+        {/* <Row>
           <Col lg={3} md={6} sm={6} xs={12}>
             <NumberWidget
               title="Total Sigap"
@@ -137,7 +137,7 @@ class DashboardPage extends React.Component {
             />
           </Col>
 
-        </Row>
+        </Row> */}
 
         <Row>
           <Col lg="12" md="12" sm="12" xs="12">
@@ -162,7 +162,7 @@ class DashboardPage extends React.Component {
           </Col>
         </Row>
 
-        <CardGroup style={{ marginBottom: '1rem' }}>
+        {/* <CardGroup style={{ marginBottom: '1rem' }}>
           <IconWidget
             bgColor="white"
             inverse={false}
@@ -184,7 +184,7 @@ class DashboardPage extends React.Component {
             title="30+ Shares"
             subtitle="New Shares"
           />
-        </CardGroup>
+        </CardGroup> */}
 
         <Row>
         <Col lg="4" md="12" sm="12" xs="12">
